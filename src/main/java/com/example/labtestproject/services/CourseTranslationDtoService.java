@@ -34,7 +34,6 @@ public class CourseTranslationDtoService {
 
     public void saveCourse() {
         List<TwelveDataRequestResult> resultList = webClientService.getTwelveDataRequestResult();
-        System.out.println(resultList);
         LocalDate dateCourse = LocalDate.parse(resultList.get(0).getValues().get(0).getDatetime());
         double rubCourse = Double.parseDouble(resultList.get(0).getValues().get(0).getClose());
         double kztCourse = Double.parseDouble(resultList.get(1).getValues().get(0).getClose());

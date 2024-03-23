@@ -1,6 +1,6 @@
 CREATE TABLE `course` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `course_date` datetime DEFAULT NULL,
+  `course_date` date DEFAULT NULL,
   `course_usd_rub` decimal(6,2) DEFAULT NULL,
   `course_usd_kzt` decimal(6,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -54,10 +54,6 @@ add CONSTRAINT fk_flg_tr_id FOREIGN KEY (trans_id) REFERENCES transactions (id);
 INSERT INTO accounts (bill) VALUES ('0000000001');
 INSERT INTO accounts (bill) VALUES ('0000000002');
 INSERT INTO accounts (bill) VALUES ('0000000003');
-
-INSERT INTO limits (limit_sum, limit_rem, limit_datetime,
-limit_currency_shortname, account_id, expense_category)
-VALUES (1000.00, 1000.00, '2024-03-21 08:00:00', 'USD', 1, 'product');
 
 INSERT INTO limits (limit_sum, limit_rem, limit_datetime,
 limit_currency_shortname, account_id, expense_category)

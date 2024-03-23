@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: 'mysql:latest'
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - 'MYSQL_DATABASE=labtest'
+      - 'MYSQL_PASSWORD=password'
+      - 'MYSQL_ROOT_PASSWORD=password'
+      - 'MYSQL_USER=root'
+    ports:
+      - '3307:3306'

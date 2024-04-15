@@ -48,7 +48,7 @@ public class AccountDtoService {
     }
 
     /** Метод для сохранения нового аккаунта, с автоматической генерацией счета. */
-    public ResponseEntity<String> saveNewBill() {
+    public synchronized ResponseEntity<String> saveNewBill() {
         Optional<Integer> maxAcc = repository.findMaxId();
         if (maxAcc.isEmpty()) {
             repository.save(new AccountDto("0000000001"));

@@ -24,7 +24,7 @@ public class CourseTranslationDtoService {
         this.webClientService = webClientService;
     }
 
-    @Scheduled(cron = "5 * * * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     public void updateOrSaveCourseByTimer() {
         if (getAllCourses().isEmpty()) {
             saveCourse();

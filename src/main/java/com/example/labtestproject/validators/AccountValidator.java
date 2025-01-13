@@ -1,6 +1,6 @@
 package com.example.labtestproject.validators;
 
-import com.example.labtestproject.services.AccountDtoService;
+import com.example.labtestproject.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,10 +10,10 @@ import java.util.NoSuchElementException;
 @Component
 public class AccountValidator {
 
-    private final AccountDtoService service;
+    private final AccountService service;
 
     @Autowired
-    public AccountValidator(AccountDtoService service) {
+    public AccountValidator(AccountService service) {
         this.service = service;
     }
 

@@ -1,6 +1,6 @@
 package com.example.labtestproject.repositories;
 
-import com.example.labtestproject.dto.LimitDto;
+import com.example.labtestproject.entity.LimitEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,17 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LimitDtoRepository extends JpaRepository<LimitDto, Long> {
+public interface LimitDtoRepository extends JpaRepository<LimitEntity, Long> {
 
-    List<LimitDto> findByAccountId(long accountId);
+    List<LimitEntity> findByAccountId(long accountId);
 
     @Transactional
     @Modifying
-    @Query("update LimitDto l set l.limitRem = ?1 where l.accountId = ?2")
+    @Query("update LimitEntity l set l.limitRem = ?1 where l.accountId = ?2")
     void updateLimitRemById(double limitRem, long id);
 
-    @Query("SELECT l FROM LimitDto l WHERE l.accountId = ?1 AND l.expenseCategory = ?2 ORDER BY l.limitDatetime DESC LIMIT 1")
-    Optional<LimitDto> findTopByAccIdAndCategoryOrdByIdDesc(long accId, String category);
+    @Query("SELECT l FROM LimitEntity l WHERE l.accountId = ?1 AND l.expenseCategory = ?2 ORDER BY l.limitDatetime DESC LIMIT 1")
+    Optional<LimitEntity> findTopByAccIdAndCategoryOrdByIdDesc(long accId, String category);
 
    @Query(value = "SELECT " +
            "tr.account_from, tr.account_to, tr.currency_shortname, tr.sum, " +

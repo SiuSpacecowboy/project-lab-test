@@ -1,6 +1,6 @@
 package com.example.labtestproject.services;
 
-import com.example.labtestproject.dto.AccountDto;
+import com.example.labtestproject.entity.AccountEntity;
 import com.example.labtestproject.repositories.AccountDtoRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AccountDtoServiceTest {
+class AccountEntityServiceTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -38,15 +38,15 @@ class AccountDtoServiceTest {
     AccountDtoRepository rep;
 
     @InjectMocks
-    AccountDtoService service;
+    AccountService service;
 
     @Test
     public void GetAccountsTest() throws Exception {
-        AccountDto acc1 = new AccountDto("000001");
+        AccountEntity acc1 = new AccountEntity("000001");
         acc1.setId(1);
-        AccountDto acc2 = new AccountDto("000002");
+        AccountEntity acc2 = new AccountEntity("000002");
         acc2.setId(2);
-        List<AccountDto> accountList = List.of(acc1, acc2);
+        List<AccountEntity> accountList = List.of(acc1, acc2);
 
         when(repository.findAll()).thenReturn(accountList);
 
@@ -64,16 +64,16 @@ class AccountDtoServiceTest {
 
         // Arrange
         long accountId = 1L;
-        AccountDto accountDto = new AccountDto("000001");
-        accountDto.setId(accountId);
-        Mockito.when(rep.findById(accountId)).thenAnswer(invocation -> Optional.of(accountDto));
+        AccountEntity accountEntity = new AccountEntity("000001");
+        accountEntity.setId(accountId);
+        Mockito.when(rep.findById(accountId)).thenAnswer(invocation -> Optional.of(accountEntity));
 
         // Act
         ResponseEntity<?> response = service.findAccountByIdForController(accountId);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(accountDto, response.getBody());
+        assertEquals(accountEntity, response.getBody());
     }
 
     @Test

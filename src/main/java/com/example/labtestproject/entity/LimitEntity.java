@@ -1,4 +1,4 @@
-package com.example.labtestproject.dto;
+package com.example.labtestproject.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "limits")
-public class LimitDto {
+public class LimitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +43,8 @@ public class LimitDto {
     @Column(name = "limit_currency_shortname")
     private String limitCurrencyShortname;
 
-    public LimitDto(BigDecimal limitSum, BigDecimal limitRem, String limitCurrencyShortname,
-                    String expenseCategory, long accountId) {
+    public LimitEntity(BigDecimal limitSum, BigDecimal limitRem, String limitCurrencyShortname,
+                       String expenseCategory, long accountId) {
         this.limitSum = limitSum;
         this.limitRem = limitRem;
         this.limitCurrencyShortname = limitCurrencyShortname;

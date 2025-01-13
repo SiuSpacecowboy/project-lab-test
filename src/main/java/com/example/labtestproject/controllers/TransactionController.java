@@ -1,7 +1,7 @@
 package com.example.labtestproject.controllers;
 
-import com.example.labtestproject.dto.TransactionDto;
-import com.example.labtestproject.services.TransactionDtoService;
+import com.example.labtestproject.entity.TransactionEntity;
+import com.example.labtestproject.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "api/v1/acc/{id}/transactions")
 public class TransactionController {
 
-    private final TransactionDtoService transactionService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public TransactionController(TransactionDtoService transactionDtoService) {
-        this.transactionService = transactionDtoService;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 
     @GetMapping
@@ -25,7 +25,7 @@ public class TransactionController {
     }
 
     @PostMapping("/new-trans")
-    public ResponseEntity<String> sendNewTransaction(@PathVariable("id") int id, @RequestBody TransactionDto trans) {
+    public ResponseEntity<String> sendNewTransaction(@PathVariable("id") int id, @RequestBody TransactionEntity trans) {
             return transactionService.saveTransactionAndUpdateLimits(trans, id);
     }
 }

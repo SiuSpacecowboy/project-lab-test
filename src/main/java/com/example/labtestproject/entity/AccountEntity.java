@@ -1,4 +1,4 @@
-package com.example.labtestproject.dto;
+package com.example.labtestproject.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "accounts")
-public class AccountDto {
+public class AccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class AccountDto {
 
     private String bill;
 
-    public AccountDto(String bill) {
+    public AccountEntity(String bill) {
         this.bill = bill;
     }
 }

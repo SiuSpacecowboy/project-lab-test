@@ -1,9 +1,7 @@
 package com.example.labtestproject.services;
 
-import com.example.labtestproject.controllers.LimitController;
-import com.example.labtestproject.dto.LimitDto;
-import com.example.labtestproject.dto.TransactionDto;
-import com.example.labtestproject.repositories.CourseTranslationDtoRepository;
+import com.example.labtestproject.entity.LimitEntity;
+import com.example.labtestproject.entity.TransactionEntity;
 import com.example.labtestproject.repositories.LimitDtoRepository;
 import com.example.labtestproject.validators.AccountValidator;
 import com.example.labtestproject.validators.EntitiesValidator;
@@ -27,7 +25,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LimitDtoServiceTest {
+class LimitEntityServiceTest {
 
     @Mock
     LimitDtoRepository repository;
@@ -36,19 +34,17 @@ class LimitDtoServiceTest {
     AccountValidator accValidator;
 
     @Mock
-    EntitiesValidator<LimitDto> entityValidator;
+    EntitiesValidator<LimitEntity> entityValidator;
 
     @InjectMocks
-    LimitDtoService service;
-
-
+    LimitService service;
 
     @Test
     public void findLimByAccId_WhenValidAccountId_ExpectListReturned() {
 
         // Arrange
         long accountId = 1L;
-        List<LimitDto> limitList = Arrays.asList(new LimitDto(), new LimitDto());
+        List<LimitEntity> limitList = Arrays.asList(new LimitEntity(), new LimitEntity());
         when(repository.findByAccountId(accountId)).thenReturn(limitList);
         when(accValidator.checkAccountId(accountId)).thenReturn(true);
 
@@ -102,7 +98,7 @@ class LimitDtoServiceTest {
 
         // Arrange
         long id = 1;
-        LimitDto testData = new LimitDto(new BigDecimal("1000"), new BigDecimal("1000"),
+        LimitEntity testData = new LimitEntity(new BigDecimal("1000"), new BigDecimal("1000"),
                 "USD", "product", 1);
 
         // Mock repository behaviour
@@ -116,30 +112,30 @@ class LimitDtoServiceTest {
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("The limit has been successfully set.", response.getBody());
-        verify(repository, times(1)).save(any(LimitDto.class));
+        verify(repository, times(1)).save(any(LimitEntity.class));
     }
 
     /**ПРОВЕРКА ФЛАГОВ **/
     @Test
     void updateLimitRem_WhenNewLimitRemNegative_ThenFlagTrue() {
-        TransactionDto trans = new TransactionDto("00001", "00003",
+        TransactionEntity trans = new TransactionEntity("00001", "00003",
                 "USD", new BigDecimal("500"), "product");
-        LimitDto lim = new LimitDto(new BigDecimal("600"), new BigDecimal("400"),
+        LimitEntity lim = new LimitEntity(new BigDecimal("600"), new BigDecimal("400"),
                 "USD", "product", 1);
         service.createLimSumIfEmptyAndUpdateLimitRem(lim, trans);
         assertEquals(lim.getLimitRem().doubleValue(), -100);
-        assertEquals(trans.getFlagDto().getFlag(), "true");
+        assertEquals(trans.getFlagEntity().getFlag(), "true");
     }
 
     @Test
     void updateLimitRem_WhenNewLimitRemPositive_ThenFlagFalse() {
-        TransactionDto trans = new TransactionDto("00001", "00003",
+        TransactionEntity trans = new TransactionEntity("00001", "00003",
                 "USD", new BigDecimal("500"), "product");
-        LimitDto lim = new LimitDto(new BigDecimal("1000"), new BigDecimal("600"),
+        LimitEntity lim = new LimitEntity(new BigDecimal("1000"), new BigDecimal("600"),
                 "USD", "product", 1);
         service.createLimSumIfEmptyAndUpdateLimitRem(lim, trans);
         assertEquals(lim.getLimitRem().doubleValue(), 100);
-        assertEquals(trans.getFlagDto().getFlag(), "false");
+        assertEquals(trans.getFlagEntity().getFlag(), "false");
     }
 
 

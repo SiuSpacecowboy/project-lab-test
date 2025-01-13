@@ -1,4 +1,4 @@
-package com.example.labtestproject.dto;
+package com.example.labtestproject.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name = "transactions")
-public class TransactionDto {
+public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,10 +54,10 @@ public class TransactionDto {
     private long accountId;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "transactionDto", orphanRemoval = true)
-    private FlagDto flagDto;
+    private FlagEntity flagEntity;
 
-    public TransactionDto(String accountFrom, String accountTo, String currencyShortName, BigDecimal sum,
-                          String expenseCategory) {
+    public TransactionEntity(String accountFrom, String accountTo, String currencyShortName, BigDecimal sum,
+                             String expenseCategory) {
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.currencyShortName = currencyShortName;

@@ -1,7 +1,7 @@
 package com.example.labtestproject.controllers;
 
-import com.example.labtestproject.dto.AccountDto;
-import com.example.labtestproject.services.AccountDtoService;
+import com.example.labtestproject.entity.AccountEntity;
+import com.example.labtestproject.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +13,15 @@ import java.util.List;
 @RequestMapping(value = "api/v1/acc")
 public class AccountController {
 
-    private final AccountDtoService service;
+    private final AccountService service;
 
     @Autowired
-    public AccountController(AccountDtoService service) {
+    public AccountController(AccountService service) {
         this.service = service;
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDto>> showAllAccounts() {
+    public ResponseEntity<List<AccountEntity>> showAllAccounts() {
         return service.getAccounts();
     }
 

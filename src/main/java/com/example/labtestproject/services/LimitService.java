@@ -1,8 +1,9 @@
 package com.example.labtestproject.services;
 
-import com.example.labtestproject.dto.FlagDto;
-import com.example.labtestproject.dto.LimitDto;
-import com.example.labtestproject.dto.TransactionDto;
+import com.example.labtestproject.entity.FlagEntity;
+import com.example.labtestproject.entity.LimitEntity;
+import com.example.labtestproject.entity.TransactionEntity;
+import com.example.labtestproject.repositories.CourseMongoRepository;
 import com.example.labtestproject.repositories.CourseTranslationDtoRepository;
 import com.example.labtestproject.repositories.LimitDtoRepository;
 import com.example.labtestproject.validators.AccountValidator;
@@ -18,25 +19,28 @@ import java.util.Optional;
 
 /** Класс направленный на манипуляции с лимитами. */
 @Service
-public class LimitDtoService {
+public class LimitService {
 
     private final LimitDtoRepository repository;
     private final CourseTranslationDtoRepository trRepository;
-    private final EntitiesValidator<LimitDto> entityValidator;
+    private final CourseMongoRepository mongoRepository;
+    private final EntitiesValidator<LimitEntity> entityValidator;
     private final AccountValidator accValidator;
 
     @Autowired
-    public LimitDtoService(LimitDtoRepository repository, CourseTranslationDtoRepository trRepository,
-                           EntitiesValidator<LimitDto> entityValidator, AccountValidator accValidator) {
+    public LimitService(LimitDtoRepository repository, CourseTranslationDtoRepository trRepository,
+                        EntitiesValidator<LimitEntity> entityValidator, AccountValidator accValidator,
+                        CourseMongoRepository mongoRepository) {
         this.repository = repository;
         this.trRepository = trRepository;
         this.entityValidator = entityValidator;
         this.accValidator = accValidator;
+        this.mongoRepository = mongoRepository;
     }
 
     /** Метод находит все лимиты, принадлежащие аккаунту. */
     public ResponseEntity<?> findLimByAccId(long id) {
-        List<LimitDto> resList = repository.findByAccountId(id);
+        List<LimitEntity> resList = repository.findByAccountId(id);
         if (accValidator.checkAccountId(id)) {
             if (resList.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK)
@@ -48,7 +52,7 @@ public class LimitDtoService {
     }
 
     /** Метод, который находит актуальный действующий лимит по категории. */
-    public Optional<LimitDto> findLatestLimitInCategory(long id, String category) {
+    public Optional<LimitEntity> findLatestLimitInCategory(long id, String category) {
         return repository.findTopByAccIdAndCategoryOrdByIdDesc(id, category);
     }
 
@@ -60,18 +64,18 @@ public class LimitDtoService {
     }
 
     /** Метод, который сохраняет новый лимит аккаунта на транзакции. */
-    public ResponseEntity<String> saveLimitInAcc(LimitDto data, long id) {
+    public ResponseEntity<String> saveLimitInAcc(LimitEntity data, long id) {
         ResponseEntity<String> resp = null;
         if (entityValidator.validate(data) && accValidator.checkAccountId(id)) {
-            Optional<LimitDto> lim = repository.findTopByAccIdAndCategoryOrdByIdDesc(id, data.getExpenseCategory());
+            Optional<LimitEntity> lim = repository.findTopByAccIdAndCategoryOrdByIdDesc(id, data.getExpenseCategory());
             if (lim.isEmpty()) {
-                repository.save(new LimitDto(data.getLimitSum(), data.getLimitSum(),
+                repository.save(new LimitEntity(data.getLimitSum(), data.getLimitSum(),
                         "USD", data.getExpenseCategory(), id));
             } else {
                 BigDecimal newLimRem = data.getLimitSum()
                         .subtract(lim.get().getLimitSum()
                                 .subtract(lim.get().getLimitRem()));
-                repository.save(new LimitDto(data.getLimitSum(), newLimRem,
+                repository.save(new LimitEntity(data.getLimitSum(), newLimRem,
                         "USD", data.getExpenseCategory(), id));
             }
             resp = ResponseEntity.status(HttpStatus.CREATED)
@@ -82,15 +86,15 @@ public class LimitDtoService {
 
     /** Метод, принимает транзакцию и прилежащий к ней лимит,
      * записывает новое значение в остаток и устанавливает флаг транзакции. */
-    public void createLimSumIfEmptyAndUpdateLimitRem(LimitDto lim, TransactionDto trans) {
+    public void createLimSumIfEmptyAndUpdateLimitRem(LimitEntity lim, TransactionEntity trans) {
         BigDecimal subSum = courseTranslation(trans.getSum(), trans.getCurrencyShortName());
         BigDecimal newLimitRem = lim.getLimitRem().subtract(subSum);
         lim.setLimitRem(newLimitRem);
         repository.save(lim);
         if (newLimitRem.doubleValue() >= 0) {
-            trans.setFlagDto(new FlagDto("false", trans));
+            trans.setFlagEntity(new FlagEntity("false", trans));
         } else {
-            trans.setFlagDto(new FlagDto("true", trans));
+            trans.setFlagEntity(new FlagEntity("true", trans));
         }
     }
 
@@ -98,11 +102,13 @@ public class LimitDtoService {
     public BigDecimal courseTranslation(BigDecimal subSum, String currencyShortname) {
         switch (currencyShortname.toLowerCase()) {
             case "rub" -> {
+                //double course = mongoRepository.findById(1L).get().getCourseUsdRub(); // Работа с MongoDb.
                 double course = trRepository.findById(1L)
                         .get().getCourseUsdRub();
                 subSum = new BigDecimal(subSum.doubleValue() / course);
             }
             case "kzt" -> {
+                //double course = mongoRepository.findById(1L).get().getCourseUsdKzt(); // Работа с MongoDb.
                 double course = trRepository.findById(1L)
                         .get().getCourseUsdKzt();
                 subSum = new BigDecimal(subSum.doubleValue() / course);

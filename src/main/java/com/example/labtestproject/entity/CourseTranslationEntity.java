@@ -1,4 +1,4 @@
-package com.example.labtestproject.dto;
+package com.example.labtestproject.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "course")
-public class CourseTranslationDto {
+public class CourseTranslationEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class CourseTranslationDto {
         @Column(name = "course_usd_kzt")
         private double courseUsdKzt;
 
-        public CourseTranslationDto(LocalDate courseDate, double courseUsdRub, double courseUsdKzt) {
+        public CourseTranslationEntity(LocalDate courseDate, double courseUsdRub, double courseUsdKzt) {
             this.courseDate = courseDate;
             this.courseUsdRub = courseUsdRub;
             this.courseUsdKzt = courseUsdKzt;

@@ -1,4 +1,4 @@
-package com.example.labtestproject.dto;
+package com.example.labtestproject.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "flags")
-public class FlagDto {
+public class FlagEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class FlagDto {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trans_id", referencedColumnName = "id")
-    private TransactionDto transactionDto;
+    private TransactionEntity transactionEntity;
 
-    public FlagDto(String flag, TransactionDto transactionDto) {
+    public FlagEntity(String flag, TransactionEntity transactionEntity) {
         this.flag = flag;
-        this.transactionDto = transactionDto;
+        this.transactionEntity = transactionEntity;
     }
 }
